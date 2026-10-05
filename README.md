@@ -4,7 +4,7 @@ Programmatic target management, scan execution, and custom reporting for **Prism
 
 Zero dependencies — Python 3.10+ standard library only.
 
-**[Full Documentation](https://rmfincher.github.io/AI-Red-Teaming-Auto/)**
+**[Full Documentation](https://rmfincher.github.io/AI-Red-Teaming-Automation/)**
 
 ## Scripts
 
@@ -133,7 +133,7 @@ OpenAPI specs: [PaloAltoNetworks/pan.dev](https://github.com/PaloAltoNetworks/pa
 
 ## Documentation
 
-**[Full interactive documentation](https://rmfincher.github.io/AI-Red-Teaming-Auto/)** — sidebar navigation, CLI reference for all scripts, end-to-end examples, API reference, and troubleshooting.
+**[Full interactive documentation](https://rmfincher.github.io/AI-Red-Teaming-Automation/)** — sidebar navigation, CLI reference for all scripts, end-to-end examples, API reference, and troubleshooting.
 
 Or open `docs/index.html` locally in a browser.
 
