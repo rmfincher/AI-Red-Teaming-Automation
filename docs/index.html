@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIRS Red Teaming Toolkit — Documentation</title>
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-2: #242736;
+    --border: #2e3142;
+    --text: #e1e4ed;
+    --text-muted: #8b8fa3;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --code-bg: #1e2030;
+    --header-bg: linear-gradient(135deg, #1e1b4b, #312e81);
+  }
+  [data-theme="light"] {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --surface-2: #f0f1f3;
+    --border: #d1d5db;
+    --text: #1f2937;
+    --text-muted: #6b7280;
+    --accent: #4f46e5;
+    --accent-light: #6366f1;
+    --code-bg: #f3f4f6;
+    --header-bg: linear-gradient(135deg, #312e81, #4338ca);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Layout */
+  .page-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 64px);
+  }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-brand {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-brand h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-light);
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar-brand p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 4px 0 0;
+  }
+  .sidebar-section {
+    padding: 0 20px;
+    margin-bottom: 8px;
+  }
+  .sidebar-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    padding: 12px 0 4px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { margin-bottom: 1px; }
+  .sidebar a {
+    display: block;
+    padding: 6px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .sidebar a:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .sidebar a.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .sidebar .sub a {
+    padding-left: 28px;
+    font-size: 12px;
+  }
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .sidebar-footer button {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .sidebar-footer button:hover { background: var(--accent); color: #fff; }
+
+  .content {
+    padding: 0 48px 64px;
+    max-width: 900px;
+    overflow-x: hidden;
+  }
+
+  /* Hero banner */
+  .hero {
+    background: var(--header-bg);
+    padding: 48px 48px 40px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .hero h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .hero p { color: rgba(255,255,255,0.75); font-size: 15px; max-width: 600px; margin-bottom: 20px; }
+  .hero-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 16px;
+    backdrop-filter: blur(4px);
+  }
+  .hero-card h3 { font-size: 13px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+  .hero-card p { font-size: 12px; color: rgba(255,255,255,0.65); margin: 0; }
+
+  /* Hide inline TOC (replaced by sidebar) */
+  .toc { display: none; }
+
+  @media (max-width: 768px) {
+    .page-layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .toc { display: block; }
+    .content { padding: 0 24px 48px; }
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+
+  /* Sections */
+  h2 {
+    font-size: 24px; font-weight: 700; margin: 48px 0 16px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--border);
+    scroll-margin-top: 24px;
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--accent-light); scroll-margin-top: 24px; }
+  h4 { font-size: 15px; font-weight: 600; margin: 24px 0 8px; }
+  .table-wrap { overflow-x: auto; margin: 12px 0 20px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 8px 0 16px 24px; }
+  li { margin-bottom: 6px; }
+
+  /* Code */
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    color: var(--accent-light);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    color: var(--text);
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  /* Tables */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 12px 0 20px; font-size: 13px;
+  }
+  th {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-muted); font-weight: 600;
+    text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;
+  }
+  td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:hover { background: var(--surface-2); }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: var(--surface-2);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout.warning { border-left-color: #f59e0b; }
+  .callout.danger { border-left-color: #ef4444; }
+  .callout strong { color: var(--text); }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  /* Transition */
+  body, .toc, pre, table, .callout { transition: background 0.2s, color 0.2s, border-color 0.2s; }
+
+  @media print {
+    .hero { background: #f0f0f8 !important; }
+    .theme-toggle { display: none; }
+    body { background: #fff; color: #000; }
+    pre { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <h2>AIRS Red Teaming</h2>
+    <p>Toolkit Documentation</p>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Getting Started</div>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#files">File Inventory</a></li>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#auth">Authentication</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Custom Report</div>
+    <ul>
+      <li><a href="#report">Overview</a></li>
+      <li><a href="#report-quickstart" class="sub">Quick Start</a></li>
+      <li><a href="#report-features" class="sub">Features</a></li>
+      <li><a href="#report-patterns" class="sub">Detection Patterns</a></li>
+      <li><a href="#report-metrics" class="sub">Methodology</a></li>
+      <li><a href="#report-flags" class="sub">CLI Reference</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Static Report</div>
+    <ul>
+      <li><a href="#static">Overview</a></li>
+      <li><a href="#static-quickstart" class="sub">Quick Start</a></li>
+      <li><a href="#static-features" class="sub">Features</a></li>
+      <li><a href="#static-flags" class="sub">CLI Reference</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Dynamic Report</div>
+    <ul>
+      <li><a href="#dynamic">Overview</a></li>
+      <li><a href="#dynamic-quickstart" class="sub">Quick Start</a></li>
+      <li><a href="#dynamic-features" class="sub">Features</a></li>
+      <li><a href="#dynamic-flags" class="sub">CLI Reference</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Scan Runner</div>
+    <ul>
+      <li><a href="#runner">Overview</a></li>
+      <li><a href="#runner-targets" class="sub">Managing Targets</a></li>
+      <li><a href="#runner-scans" class="sub">Starting Scans</a></li>
+      <li><a href="#runner-monitor" class="sub">Monitoring &amp; Quota</a></li>
+      <li><a href="#runner-flags" class="sub">CLI Reference</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Reference</div>
+    <ul>
+      <li><a href="#api">API Reference</a></li>
+      <li><a href="#examples">End-to-End Examples</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-footer">
+    <button onclick="toggleTheme()" id="themeBtn">Light Mode</button>
+  </div>
+</nav>
+
+<!-- Content -->
+<div class="content">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>AIRS Red Teaming Toolkit</h1>
+  <p>Programmatic target management, scan execution, and custom reporting for Prisma AIRS AI Red Teaming.</p>
+  <div class="hero-cards">
+    <div class="hero-card">
+      <h3>Report Generator</h3>
+      <p>Adjusted Attack Success Rate, guardrail detection, severity ranking, interactive drill-down</p>
+    </div>
+    <div class="hero-card">
+      <h3>Scan Runner</h3>
+      <p>Create targets, start scans, monitor progress, check quota &mdash; all from the CLI</p>
+    </div>
+    <div class="hero-card">
+      <h3>Zero Dependencies</h3>
+      <p>Python stdlib only. Service account or browser token auth. Any AIRS tenant.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="overview">Overview</h2>
+
+<p>The AIRS Red Teaming Toolkit is a set of Python scripts for automating AI red teaming workflows via the Prisma AIRS API:</p>
+
+<table>
+  <tr><th>Script</th><th>Scan Type</th><th>Purpose</th></tr>
+  <tr>
+    <td><code>airs_custom_report.py</code></td>
+    <td>Custom</td>
+    <td>Report for custom prompt-set scans with adjusted ASR, guardrail/rate-limit detection, severity ranking</td>
+  </tr>
+  <tr>
+    <td><code>airs_static_report.py</code></td>
+    <td>Static</td>
+    <td>Report for attack library scans with category/subcategory breakdown, compliance mapping, severity analysis</td>
+  </tr>
+  <tr>
+    <td><code>airs_dynamic_report.py</code></td>
+    <td>Dynamic</td>
+    <td>Report for agent scans with goal/stream/iteration drill-down, attack strategy badges, multi-turn conversation view</td>
+  </tr>
+  <tr>
+    <td><code>airs_runner.py</code></td>
+    <td>All</td>
+    <td>Target creation, scan execution (all types), progress monitoring, quota management</td>
+  </tr>
+  <tr>
+    <td><code>ally_custom_report.py</code></td>
+    <td>Custom</td>
+    <td>Ally/Copilot-specific variant with hardcoded detection patterns. Reference implementation.</td>
+  </tr>
+</table>
+
+<p>All scripts use only the Python standard library (no <code>pip install</code> required) and support multiple authentication methods.</p>
+
+<div class="callout warning">
+  <strong>Scan type support:</strong> The report generator currently supports <strong>custom prompt-set scans</strong> only. Static and dynamic scan types use different API endpoints (<code>/report/static/</code> and <code>/report/dynamic/</code>) and are not yet implemented in the report script. The scan runner supports all three types for creating and monitoring scans.
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="files">File Inventory</h2>
+
+<table>
+  <tr><th>File</th><th>Type</th><th>Description</th></tr>
+  <tr><td><code>airs_custom_report.py</code></td><td>Script</td><td>Custom prompt-set scan report generator</td></tr>
+  <tr><td><code>airs_static_report.py</code></td><td>Script</td><td>Static (attack library) scan report generator</td></tr>
+  <tr><td><code>airs_dynamic_report.py</code></td><td>Script</td><td>Dynamic (agent) scan report generator</td></tr>
+  <tr><td><code>airs_runner.py</code></td><td>Script</td><td>Target management, scan execution, monitoring</td></tr>
+  <tr><td><code>ally_custom_report.py</code></td><td>Script</td><td>Ally/Copilot-specific report (reference implementation)</td></tr>
+  <tr><td><code>airs_toolkit_docs.html</code></td><td>Docs</td><td>This documentation file</td></tr>
+  <tr><td><code>dp-openapi.yaml</code></td><td>Spec</td><td>Data Plane OpenAPI spec (scans, reports, attacks)</td></tr>
+  <tr><td><code>mp-openapi.yaml</code></td><td>Spec</td><td>Management Plane OpenAPI spec (targets, prompt sets)</td></tr>
+  <tr><td><code>nb-openapi.yaml</code></td><td>Spec</td><td>Network Broker OpenAPI spec (private endpoint channels)</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li><strong>Python 3.10+</strong> (any OS)</li>
+  <li><strong>Network access</strong> to <code>api.sase.paloaltonetworks.com</code></li>
+  <li><strong>AIRS AI Red Teaming license</strong> activated on the tenant</li>
+  <li><strong>Authentication</strong> — one of: bearer token, refresh token, or SCM service account credentials</li>
+</ul>
+
+<div class="callout">
+  <strong>No dependencies.</strong> Both scripts use only Python's standard library (<code>urllib</code>, <code>json</code>, <code>concurrent.futures</code>). No <code>pip install</code> or virtual environment needed.
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="auth">Authentication</h2>
+
+<p>Both scripts support three authentication methods:</p>
+
+<h4>Option 1: Bearer Token (quickest for testing)</h4>
+<p>Grab a token from the browser. In the AIRS console, open Dev Tools &gt; Console and run:</p>
+<pre><code>JSON.parse(sessionStorage.getItem(
+  'spk.oidc.&lt;TSG_ID&gt;.user:https://auth.apps.paloaltonetworks.com/am/oauth2/:scm'
+)).access_token</code></pre>
+<p>Then pass it with <code>--token "&lt;value&gt;"</code>. Tokens expire in 15 minutes.</p>
+
+<div class="callout warning">
+  <strong>Token refresh tip:</strong> If the token in session storage is stale, run this in the Console to force a refresh:
+  <pre><code>sessionStorage.removeItem('spk.oidc.&lt;TSG_ID&gt;.user:https://auth.apps.paloaltonetworks.com/am/oauth2/:scm');
+location.reload();</code></pre>
+</div>
+
+<h4>Option 2: Service Account (for automation)</h4>
+<p>Create an SCM service account in the Palo Alto Networks hub, then:</p>
+<pre><code>export SASE_CLIENT_ID="&lt;client-id&gt;"
+export SASE_CLIENT_SECRET="&lt;client-secret&gt;"
+export SASE_TSG_ID="&lt;tsg-id&gt;"
+
+python3 airs_custom_report.py --job-id &lt;uuid&gt;
+python3 airs_runner.py list-targets</code></pre>
+<p>Or pass them as flags: <code>--client-id X --client-secret Y --tsg-id Z</code></p>
+
+<h4>Option 3: Refresh Token</h4>
+<p>Valid for ~8 hours. Pass with <code>--refresh-token "&lt;value&gt;"</code>. The script exchanges it for a fresh access token automatically.</p>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="report">Custom Report Generator <span class="badge">airs_custom_report.py</span></h2>
+
+<h3 id="report-quickstart">Quick Start</h3>
+<pre><code># List available scans
+python3 airs_custom_report.py --list-scans --token "&lt;token&gt;"
+
+# Generate a report
+python3 airs_custom_report.py --job-id &lt;scan-uuid&gt; --token "&lt;token&gt;"
+
+# With guardrail and rate-limit detection (target-specific)
+python3 airs_custom_report.py --job-id &lt;uuid&gt; --token "&lt;token&gt;" \
+    --guardrail-pattern "safety filter triggered" \
+    --ratelimit-pattern "unable to respond to this volume"</code></pre>
+
+<p>The report is saved as <code>report_&lt;job-id&gt;.html</code> in the current directory. Open it in any browser.</p>
+
+<h3 id="report-features">Features</h3>
+
+<table>
+  <tr><th>Feature</th><th>Description</th></tr>
+  <tr>
+    <td><strong>Adjusted Attack Success Rate</strong></td>
+    <td>Recalculates the ASR after removing errored and rate-limited attacks that never tested the target. Shows raw vs. adjusted side-by-side with charts.</td>
+  </tr>
+  <tr>
+    <td><strong>Guardrail Detection</strong></td>
+    <td>Identifies outputs where the target's content safety filter blocked the attack. Tagged with a blue GUARDRAIL badge. Counted as "defended" (safe) in the adjusted rate.</td>
+  </tr>
+  <tr>
+    <td><strong>Rate-Limit Detection</strong></td>
+    <td>Identifies outputs where the target returned a throttle message (HTTP 200 but not a real response). Attacks where ALL outputs were rate-limited are excluded from the adjusted rate.</td>
+  </tr>
+  <tr>
+    <td><strong>Severity Ranking</strong></td>
+    <td>Attacks are ranked by breach rate (how many retries succeeded). CRITICAL = 100%, HIGH = 50-99%, MEDIUM = &lt;50%. Worst-first ordering.</td>
+  </tr>
+  <tr>
+    <td><strong>Collapsible Drill-Down</strong></td>
+    <td>Three levels: prompt &rarr; attempt &rarr; full output/reasoning. Everything starts collapsed for scanability.</td>
+  </tr>
+  <tr>
+    <td><strong>Charts</strong></td>
+    <td>Attack Success Rate comparison (raw vs adjusted), outcome distribution, per-prompt-set breakdown, breach rate distribution. All inline SVG, no external dependencies.</td>
+  </tr>
+  <tr>
+    <td><strong>Methodology Sections</strong></td>
+    <td>Each chart has a collapsible methodology explanation documenting exactly how the numbers are calculated, including formulas, API endpoints, and detection patterns.</td>
+  </tr>
+  <tr>
+    <td><strong>Error Log</strong></td>
+    <td>Filterable by error type (CONTENT_FILTER, RATE_LIMIT, NETWORK, etc.) and source (TARGET, JOB, SYSTEM).</td>
+  </tr>
+  <tr>
+    <td><strong>Light/Dark Mode</strong></td>
+    <td>Toggle button in the header. Print-friendly.</td>
+  </tr>
+  <tr>
+    <td><strong>Parallel Fetching</strong></td>
+    <td>Per-attack output fetches use a 10-thread pool (~5x faster than sequential).</td>
+  </tr>
+</table>
+
+<h3 id="report-patterns">Guardrail &amp; Rate-Limit Detection</h3>
+
+<p>The report script detects target-specific responses by pattern matching the output text. Patterns are passed via CLI flags — no defaults are hardcoded, so you must specify them per target.</p>
+
+<h4>Common patterns by target type</h4>
+
+<table>
+  <tr><th>Target</th><th>Guardrail Pattern</th><th>Rate-Limit Pattern</th></tr>
+  <tr>
+    <td>M365 Copilot</td>
+    <td><code>Disengaged safety filter triggered</code></td>
+    <td><code>temporarily unable to respond to this volume</code></td>
+  </tr>
+  <tr>
+    <td>ChatGPT / OpenAI</td>
+    <td><code>I can't assist with that</code></td>
+    <td><code>Rate limit reached</code></td>
+  </tr>
+  <tr>
+    <td>Claude / Anthropic</td>
+    <td><code>I cannot and will not</code></td>
+    <td><code>rate_limit_error</code></td>
+  </tr>
+  <tr>
+    <td>Custom target</td>
+    <td><em>Check your target's refusal message</em></td>
+    <td><em>Check your target's throttle message</em></td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>How to find your patterns:</strong> Run the report once without patterns. Expand the attack details, look for repetitive "safe" responses that aren't real answers — those are your guardrail/rate-limit messages. Then re-run with those patterns.
+</div>
+
+<h4>How detection works</h4>
+
+<ol>
+  <li><strong>Per-output tagging:</strong> Every output is checked against the patterns (case-insensitive substring match). Matching outputs get a GUARDRAIL or RATE LIMITED badge.</li>
+  <li><strong>Per-attack classification:</strong> If ALL outputs of an attack match the rate-limit pattern, the entire attack is excluded from the adjusted rate (it was never tested). Guardrail matches stay in the evaluated pool as "defended."</li>
+  <li><strong>Error log cross-reference:</strong> Attacks in the error log are only excluded if they have NO valid outputs. If at least one retry returned a real response, the attack stays evaluated.</li>
+</ol>
+
+<h3 id="report-metrics">Adjusted Metrics Methodology</h3>
+
+<h4>Attack Success Rate</h4>
+<pre><code>Raw ASR     = Total Threats / Total Attacks x 100
+Adjusted ASR = Threats Found / Evaluated Attacks x 100
+
+Evaluated Attacks = Total - Errored - Rate Limited</code></pre>
+
+<h4>Breach Rate (per attack)</h4>
+<pre><code>Breach Rate = Threat Attempts / Testable Attempts x 100
+
+Testable Attempts = Total Outputs - Rate Limited - Errored</code></pre>
+
+<h4>Severity Classification</h4>
+<table>
+  <tr><th>Severity</th><th>Breach Rate</th><th>Meaning</th></tr>
+  <tr><td style="color:#dc2626;font-weight:700">CRITICAL</td><td>100%</td><td>Every testable attempt breached. Systematic, repeatable vulnerability.</td></tr>
+  <tr><td style="color:#ea580c;font-weight:700">HIGH</td><td>50-99%</td><td>Most attempts breached. Partial guardrail that can be strengthened.</td></tr>
+  <tr><td style="color:#d97706;font-weight:700">MEDIUM</td><td>&lt;50%</td><td>Some attempts breached. Edge case or inconsistent defense.</td></tr>
+  <tr><td style="color:#22c55e;font-weight:700">Defended</td><td>0%</td><td>No breaches across all retries.</td></tr>
+</table>
+
+<h3 id="report-flags">CLI Reference</h3>
+
+<table>
+  <tr><th>Flag</th><th>Description</th></tr>
+  <tr><td><code>--job-id &lt;uuid&gt;</code></td><td>Scan job UUID (required unless --list-scans)</td></tr>
+  <tr><td><code>--list-scans</code></td><td>List recent scans on the tenant and exit</td></tr>
+  <tr><td><code>--output &lt;path&gt;</code></td><td>Output HTML file path (default: <code>report_&lt;id&gt;.html</code>)</td></tr>
+  <tr><td><code>--guardrail-pattern &lt;text&gt;</code></td><td>Substring indicating a guardrail block (repeatable)</td></tr>
+  <tr><td><code>--ratelimit-pattern &lt;text&gt;</code></td><td>Substring indicating rate limiting (repeatable)</td></tr>
+  <tr><td><code>--throttle-pattern &lt;text&gt;</code></td><td>Legacy alias for --ratelimit-pattern (repeatable)</td></tr>
+  <tr><td><code>--token &lt;jwt&gt;</code></td><td>Bearer token</td></tr>
+  <tr><td><code>--refresh-token &lt;jwt&gt;</code></td><td>Refresh token (auto-exchanges for access token)</td></tr>
+  <tr><td><code>--client-id / --client-secret / --tsg-id</code></td><td>Service account credentials</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="static">Static Scan Report <span class="badge">airs_static_report.py</span></h2>
+
+<p>Generates reports for <strong>attack library (STATIC)</strong> scans — the standard scan type that tests a target against AIRS's built-in library of categorized attacks.</p>
+
+<h3 id="static-quickstart">Quick Start</h3>
+<pre><code># List completed scans
+python3 airs_static_report.py --list-scans --token "&lt;token&gt;"
+
+# Generate report
+python3 airs_static_report.py --job-id &lt;uuid&gt; --token "&lt;token&gt;"
+
+# With service account
+python3 airs_static_report.py --job-id &lt;uuid&gt; \
+    --client-id X --client-secret Y --tsg-id Z
+
+# With guardrail/rate-limit detection
+python3 airs_static_report.py --job-id &lt;uuid&gt; --token "&lt;token&gt;" \
+    --guardrail-pattern "I can't assist" \
+    --ratelimit-pattern "rate limit"</code></pre>
+
+<h3 id="static-features">Features</h3>
+<p>Includes everything from the custom report plus static-scan-specific analysis:</p>
+<table>
+  <tr><th>Feature</th><th>Description</th></tr>
+  <tr><td><strong>Executive Summary</strong></td><td>LLM-generated summary from AIRS with key risks and implications, rendered as formatted HTML</td></tr>
+  <tr><td><strong>Category/Subcategory ASR</strong></td><td>Attack Success Rate broken down by Security, Safety, Brand, Compliance categories and their subcategories (Jailbreak, Prompt Injection, Bias, etc.)</td></tr>
+  <tr><td><strong>Severity Breakdown</strong></td><td>Attack counts by API-assigned severity (CRITICAL, HIGH, MEDIUM, LOW)</td></tr>
+  <tr><td><strong>Compliance Mapping</strong></td><td>OWASP, MITRE ATLAS, NIST, DASF framework scores and technique violation counts</td></tr>
+  <tr><td><strong>Remediation Recommendations</strong></td><td>AIRS-generated remediation actions with priority, effectiveness ratings, and resource links</td></tr>
+  <tr><td><strong>Breach Rate Ranking</strong></td><td>Attacks ranked by consistency of breach across retries (CRITICAL = 100%, HIGH = 50-99%, MEDIUM = &lt;50%)</td></tr>
+  <tr><td><strong>Guardrail/Rate-Limit Detection</strong></td><td>Same configurable pattern matching as the custom report</td></tr>
+  <tr><td><strong>Prompts vs Attempts</strong></td><td>Clearly distinguishes unique prompts (184) from total attempts (1104) in KPIs and charts</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Prompts vs Attempts:</strong> A static scan tests each unique prompt multiple times (retries). The report shows both: unique prompts in the attack details (expandable) and total attempts in the KPIs. The API's ASR is calculated at the attempt level.
+</div>
+
+<h3 id="static-flags">CLI Reference</h3>
+<table>
+  <tr><th>Flag</th><th>Description</th></tr>
+  <tr><td><code>--job-id &lt;uuid&gt;</code></td><td>Scan job UUID</td></tr>
+  <tr><td><code>--list-scans</code></td><td>List completed scans and exit</td></tr>
+  <tr><td><code>--output &lt;path&gt;</code></td><td>Output file (default: <code>static_report_&lt;id&gt;.html</code>)</td></tr>
+  <tr><td><code>--guardrail-pattern &lt;text&gt;</code></td><td>Guardrail detection pattern (repeatable)</td></tr>
+  <tr><td><code>--ratelimit-pattern &lt;text&gt;</code></td><td>Rate-limit detection pattern (repeatable)</td></tr>
+  <tr><td><code>--token / --refresh-token</code></td><td>Bearer or refresh token</td></tr>
+  <tr><td><code>--client-id / --client-secret / --tsg-id</code></td><td>Service account credentials (or env vars)</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="dynamic">Dynamic (Agent) Scan Report <span class="badge">airs_dynamic_report.py</span></h2>
+
+<p>Generates reports for <strong>dynamic (DYNAMIC)</strong> scans — agentic scans where an AI attacker profiles the target, generates attack goals, and runs adaptive multi-turn conversations to breach defenses.</p>
+
+<h3 id="dynamic-quickstart">Quick Start</h3>
+<pre><code># List dynamic scans
+python3 airs_dynamic_report.py --list-scans --token "&lt;token&gt;"
+
+# Generate report
+python3 airs_dynamic_report.py --job-id &lt;uuid&gt; --token "&lt;token&gt;"
+
+# With service account
+python3 airs_dynamic_report.py --job-id &lt;uuid&gt; \
+    --client-id X --client-secret Y --tsg-id Z</code></pre>
+
+<h3 id="dynamic-features">Features</h3>
+<table>
+  <tr><th>Feature</th><th>Description</th></tr>
+  <tr><td><strong>Executive Summary</strong></td><td>LLM-generated summary with susceptibility analysis</td></tr>
+  <tr><td><strong>Goal Category ASR</strong></td><td>ASR by goal category: Goal Manipulation, Tool Misuse, Privilege Misuse, Tool Chaining, Toxic Content, Memory Poisoning</td></tr>
+  <tr><td><strong>Goal &rarr; Stream &rarr; Turn Hierarchy</strong></td><td>Three-level collapsible drill-down showing the full multi-turn conversation flow</td></tr>
+  <tr><td><strong>Attack Strategy Badges</strong></td><td>GOAT and CRESCENDO strategy labels on each stream (LEGACY streams show no badge)</td></tr>
+  <tr><td><strong>Score per Turn</strong></td><td>Judge score (0-10) on each iteration with color-coded badges (threat threshold = 3)</td></tr>
+  <tr><td><strong>Remediation Recommendations</strong></td><td>AIRS-generated with priority and affected goal categories</td></tr>
+  <tr><td><strong>Goals Tested vs Breached</strong></td><td>KPIs showing how many attack goals the target defended vs how many were breached</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Dynamic scan hierarchy:</strong> A dynamic scan generates <strong>goals</strong> (attack objectives) based on target profiling. Each goal is tested by multiple <strong>streams</strong> (independent attack attempts). Each stream is a multi-turn <strong>conversation</strong> where the AI attacker adapts its prompts based on the target's responses.
+</div>
+
+<h3 id="dynamic-flags">CLI Reference</h3>
+<table>
+  <tr><th>Flag</th><th>Description</th></tr>
+  <tr><td><code>--job-id &lt;uuid&gt;</code></td><td>Scan job UUID</td></tr>
+  <tr><td><code>--list-scans</code></td><td>List dynamic scans and exit</td></tr>
+  <tr><td><code>--output &lt;path&gt;</code></td><td>Output file (default: <code>dynamic_report_&lt;id&gt;.html</code>)</td></tr>
+  <tr><td><code>--token / --refresh-token</code></td><td>Bearer or refresh token</td></tr>
+  <tr><td><code>--client-id / --client-secret / --tsg-id</code></td><td>Service account credentials (or env vars)</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="runner">Scan Runner <span class="badge">airs_runner.py</span></h2>
+
+<h3 id="runner-targets">Managing Targets</h3>
+
+<h4>List existing targets</h4>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" list-targets</code></pre>
+
+<h4>Create a target — REST API with header auth</h4>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" create-target \
+    --name "My GPT-4o Target" \
+    --target-type MODEL \
+    --connection-type OPENAI \
+    --api-endpoint "https://api.openai.com/v1/chat/completions" \
+    --request-header "Authorization: Bearer sk-proj-xxxxx" \
+    --request-header "Content-Type: application/json" \
+    --request-json '{"model":"gpt-4o","messages":[{"role":"user","content":"{INPUT}"}]}' \
+    --response-key "choices[0].message.content" \
+    --validate</code></pre>
+
+<h4>Create a target — OAuth2 auth (e.g., demo bot)</h4>
+<p>For targets requiring OAuth2 client credentials, use the API directly or the AIRS UI. The scan runner's <code>create-target</code> command supports header-based auth; for OAuth2, the auth config requires additional fields:</p>
+
+<pre><code># OAuth2 auth config structure (used in API call body):
+{
+  "auth_type": "OAUTH2",
+  "auth_config": {
+    "oauth2_token_url": "https://example.com/auth/token",
+    "oauth2_body_params": {
+      "grant_type": "client_credentials",
+      "client_id": "my-client",
+      "client_secret": "my-secret"
+    },
+    "oauth2_headers": {
+      "Content-Type": "application/json"
+    },
+    "oauth2_token_response_key": "access_token",
+    "oauth2_inject_header": {
+      "Authorization": "Bearer {TOKEN}"
+    },
+    "oauth2_expiry_minutes": 55
+  }
+}</code></pre>
+
+<h4>Target types</h4>
+<table>
+  <tr><th>Type</th><th>Use when</th></tr>
+  <tr><td><code>MODEL</code></td><td>Direct LLM API (OpenAI, Anthropic, Bedrock, etc.)</td></tr>
+  <tr><td><code>APPLICATION</code></td><td>App wrapping an LLM (chatbot, customer support, etc.)</td></tr>
+  <tr><td><code>AGENT</code></td><td>Agentic system with tool access</td></tr>
+</table>
+
+<h4>Connection types</h4>
+<table>
+  <tr><th>Type</th><th>Description</th></tr>
+  <tr><td><code>OPENAI</code></td><td>OpenAI-compatible API</td></tr>
+  <tr><td><code>BEDROCK</code></td><td>AWS Bedrock</td></tr>
+  <tr><td><code>VERTEX_AI</code></td><td>Google Vertex AI</td></tr>
+  <tr><td><code>HUGGING_FACE</code></td><td>Hugging Face Inference</td></tr>
+  <tr><td><code>DATABRICKS</code></td><td>Databricks model serving</td></tr>
+  <tr><td><code>MS_COPILOT_STUDIO</code></td><td>Microsoft Copilot Studio</td></tr>
+  <tr><td><code>CUSTOM</code></td><td>Any REST API with configurable request/response templates</td></tr>
+  <tr><td><code>CUSTOM_TARGET_ADAPTER</code></td><td>Custom Python adapter script</td></tr>
+</table>
+
+<h3 id="runner-scans">Starting Scans</h3>
+
+<h4>Static scan (attack library)</h4>
+<p>Tests the target against AIRS's built-in attack library. Specify categories and subcategories:</p>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" start-scan \
+    --name "Security Scan" \
+    --target-id &lt;target-uuid&gt; \
+    --scan-type STATIC \
+    --categories "SECURITY:JAILBREAK,PROMPT_INJECTION,SYSTEM_PROMPT_LEAK" \
+                 "SAFETY:BIAS,HATE_TOXIC_ABUSE" \
+    --rate-limit 10 \
+    --watch</code></pre>
+
+<h4>Available categories and subcategories</h4>
+<div class="table-wrap">
+<table>
+  <tr><th>Category</th><th>Subcategories</th></tr>
+  <tr><td><code>SECURITY</code></td><td><code>ADVERSARIAL_SUFFIX</code>, <code>EVASION</code>, <code>INDIRECT_PROMPT_INJECTION</code>, <code>JAILBREAK</code>, <code>MULTI_TURN</code>, <code>PROMPT_INJECTION</code>, <code>REMOTE_CODE_EXECUTION</code>, <code>SYSTEM_PROMPT_LEAK</code>, <code>TOOL_LEAK</code>, <code>MALWARE_GENERATION</code></td></tr>
+  <tr><td><code>SAFETY</code></td><td><code>BIAS</code>, <code>CBRN</code>, <code>CYBERCRIME</code>, <code>DRUGS</code>, <code>HATE_TOXIC_ABUSE</code>, <code>NON_VIOLENT_CRIMES</code>, <code>POLITICAL</code>, <code>SELF_HARM</code>, <code>SEXUAL</code>, <code>VIOLENT_CRIMES_WEAPONS</code></td></tr>
+  <tr><td><code>BRAND</code></td><td><code>COMPETITOR_ENDORSEMENTS</code>, <code>BRAND_TARNISHING_SELF_CRITICISM</code>, <code>DISCRIMINATING_CLAIMS</code>, <code>POLITICAL_ENDORSEMENTS</code></td></tr>
+  <tr><td><code>COMPLIANCE</code></td><td><code>OWASP</code>, <code>MITRE_ATLAS</code>, <code>NIST</code>, <code>DASF_V2</code></td></tr>
+</table>
+</div>
+
+<h4>Dynamic scan (agentic)</h4>
+<p>AI-driven attack that adapts its strategy based on target responses:</p>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" start-scan \
+    --name "Agentic Scan" \
+    --target-id &lt;target-uuid&gt; \
+    --scan-type DYNAMIC \
+    --stream-breadth 6 \
+    --stream-depth 10 \
+    --goal-categories GOAL_MANIPULATION TOOL_MISUSE \
+    --watch</code></pre>
+
+<h4>Custom prompt-set scan</h4>
+<p>Test with your own prompts (uploaded via the UI or management API):</p>
+<pre><code># List available prompt sets
+python3 airs_runner.py --token "&lt;token&gt;" list-prompt-sets
+
+# Start scan with specific prompt sets
+python3 airs_runner.py --token "&lt;token&gt;" start-scan \
+    --name "Custom Prompt Test" \
+    --target-id &lt;target-uuid&gt; \
+    --scan-type CUSTOM \
+    --prompt-set-ids &lt;uuid1&gt; &lt;uuid2&gt; \
+    --watch</code></pre>
+
+<h3 id="runner-monitor">Monitoring &amp; Quota</h3>
+
+<h4>Watch a running scan</h4>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" watch --job-id &lt;scan-uuid&gt;</code></pre>
+<p>Polls every 15 seconds and shows status, progress, ASR, ETA, and current attack category. Exits when the scan completes.</p>
+
+<h4>Check quota</h4>
+<pre><code>python3 airs_runner.py --token "&lt;token&gt;" quota</code></pre>
+<p>Shows allocated, consumed, and remaining scan credits for STATIC, DYNAMIC, and CUSTOM scan types.</p>
+
+<h3 id="runner-flags">CLI Reference</h3>
+
+<table>
+  <tr><th>Command</th><th>Key Flags</th></tr>
+  <tr>
+    <td><code>list-targets</code></td>
+    <td>No additional flags needed</td>
+  </tr>
+  <tr>
+    <td><code>list-scans</code></td>
+    <td>No additional flags needed</td>
+  </tr>
+  <tr>
+    <td><code>list-prompt-sets</code></td>
+    <td>No additional flags needed</td>
+  </tr>
+  <tr>
+    <td><code>create-target</code></td>
+    <td><code>--name</code>, <code>--target-type</code>, <code>--connection-type</code>, <code>--response-mode</code>, <code>--api-endpoint-type</code>, <code>--api-endpoint</code>, <code>--request-header</code> (repeatable), <code>--request-json</code>, <code>--response-json</code>, <code>--response-key</code>, <code>--target-background-industry</code>, <code>--target-background-use-case</code>, <code>--validate</code></td>
+  </tr>
+  <tr>
+    <td><code>start-scan</code></td>
+    <td><code>--name</code>, <code>--target-id</code>, <code>--scan-type</code>, <code>--categories</code>, <code>--prompt-set-ids</code>, <code>--goal-categories</code>, <code>--stream-breadth</code>, <code>--stream-depth</code>, <code>--rate-limit</code>, <code>--watch</code></td>
+  </tr>
+  <tr>
+    <td><code>watch</code></td>
+    <td><code>--job-id</code></td>
+  </tr>
+  <tr>
+    <td><code>quota</code></td>
+    <td>No additional flags needed</td>
+  </tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="api">API Reference</h2>
+
+<p>The AIRS Red Teaming API is split across three planes:</p>
+
+<table>
+  <tr><th>Plane</th><th>Base URL</th><th>Purpose</th></tr>
+  <tr>
+    <td><strong>Management</strong></td>
+    <td><code>/ai-red-teaming/mgmt-plane/v1/</code></td>
+    <td>Targets, custom prompt sets, adapters, dashboard</td>
+  </tr>
+  <tr>
+    <td><strong>Data</strong></td>
+    <td><code>/ai-red-teaming/data-plane/v1/</code></td>
+    <td>Scans, reports, attack details, error logs, quota</td>
+  </tr>
+  <tr>
+    <td><strong>Network Broker</strong></td>
+    <td><code>/ai-red-teaming/network-broker/v1/</code></td>
+    <td>Network channel configuration for private endpoints</td>
+  </tr>
+</table>
+
+<p>All endpoints are under <code>https://api.sase.paloaltonetworks.com</code>. The path must include the plane prefix — calling <code>/ai-red-teaming/v1/...</code> without the plane prefix returns a 403.</p>
+
+<div class="callout warning">
+  <strong>Common gotcha:</strong> The path must include <code>/data-plane/</code> or <code>/mgmt-plane/</code>. Calling <code>/ai-red-teaming/v1/...</code> directly gives a bare 403 from the gateway.
+</div>
+
+<h4>Key data-plane endpoints used by the report</h4>
+<table>
+  <tr><th>Endpoint</th><th>Purpose</th></tr>
+  <tr><td><code>GET /v1/scan</code></td><td>List scans</td></tr>
+  <tr><td><code>GET /v1/scan/{job_id}</code></td><td>Scan details and status</td></tr>
+  <tr><td><code>POST /v1/scan</code></td><td>Create and start a scan</td></tr>
+  <tr><td><code>GET /v1/custom-attacks/job/{id}/list-custom-attacks</code></td><td>List custom attacks (paginated)</td></tr>
+  <tr><td><code>GET /v1/custom-attacks/job/{id}/attack/{id}/list-outputs</code></td><td>Per-attack outputs with verdicts</td></tr>
+  <tr><td><code>GET /v1/custom-attacks/report/{id}</code></td><td>Report summary</td></tr>
+  <tr><td><code>GET /v1/report/static/{id}/list-attacks</code></td><td>Static scan attacks</td></tr>
+  <tr><td><code>GET /v1/report/dynamic/{id}/list-goals</code></td><td>Dynamic scan goals</td></tr>
+  <tr><td><code>GET /v1/error-log/job/{id}</code></td><td>Error logs</td></tr>
+  <tr><td><code>POST /v1/metering/quota</code></td><td>Quota summary</td></tr>
+</table>
+
+<h4>Key management-plane endpoints used by the scan runner</h4>
+<table>
+  <tr><th>Endpoint</th><th>Purpose</th></tr>
+  <tr><td><code>GET /v1/target</code></td><td>List targets</td></tr>
+  <tr><td><code>POST /v1/target</code></td><td>Create target</td></tr>
+  <tr><td><code>GET /v1/target/{uuid}</code></td><td>Target details</td></tr>
+  <tr><td><code>PUT /v1/target/{uuid}</code></td><td>Update target</td></tr>
+  <tr><td><code>DELETE /v1/target/{uuid}</code></td><td>Delete target</td></tr>
+  <tr><td><code>GET /v1/custom-attack/list-custom-prompt-sets</code></td><td>List prompt sets</td></tr>
+  <tr><td><code>POST /v1/custom-attack/custom-prompt-set</code></td><td>Create prompt set</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="examples">End-to-End Examples</h2>
+
+<h3>Example 1: Full automation with service account</h3>
+<pre><code># Set credentials once
+export SASE_CLIENT_ID="sa-xxxxx"
+export SASE_CLIENT_SECRET="xxxxx"
+export SASE_TSG_ID="1234567890"
+
+# 1. Create target
+python3 airs_runner.py create-target \
+    --name "Prod Chatbot" \
+    --target-type APPLICATION \
+    --connection-type CUSTOM \
+    --api-endpoint "https://chatbot.example.com/api/chat" \
+    --request-header "Authorization: Bearer $API_KEY" \
+    --request-header "Content-Type: application/json" \
+    --request-json '{"query":"{INPUT}"}' \
+    --response-key "response" \
+    --validate
+
+# 2. Start scan and wait for completion
+python3 airs_runner.py start-scan \
+    --name "Weekly Scan $(date +%Y-%m-%d)" \
+    --target-id &lt;uuid-from-step-1&gt; \
+    --scan-type STATIC \
+    --categories "SECURITY:JAILBREAK,PROMPT_INJECTION" "SAFETY:BIAS" \
+    --rate-limit 10 \
+    --watch
+
+# 3. Generate custom report
+python3 airs_custom_report.py \
+    --job-id &lt;job-id-from-step-2&gt; \
+    --guardrail-pattern "I cannot help with that" \
+    --ratelimit-pattern "rate limit exceeded"</code></pre>
+
+<h3>Example 2: M365 Copilot report (Ally-style)</h3>
+<pre><code>python3 airs_custom_report.py \
+    --job-id &lt;scan-uuid&gt; \
+    --token "&lt;token&gt;" \
+    --guardrail-pattern "Disengaged safety filter triggered" \
+    --guardrail-pattern "M365 Copilot declined to respond" \
+    --ratelimit-pattern "temporarily unable to respond to this volume"</code></pre>
+
+<h3>Example 3: Quick scan for a demo</h3>
+<pre><code># Minimal scan — single category, fast
+python3 airs_runner.py --token "&lt;token&gt;" start-scan \
+    --name "Quick Demo Scan" \
+    --target-id &lt;target-uuid&gt; \
+    --scan-type STATIC \
+    --categories "SECURITY:JAILBREAK" \
+    --watch</code></pre>
+
+<!-- ───────────────────────────────────────── -->
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>HTTP 401: Invalid Request Token</code></td>
+    <td>Token expired (15-min lifetime)</td>
+    <td>Grab a fresh token from session storage, or use a service account</td>
+  </tr>
+  <tr>
+    <td><code>HTTP 403</code> (bare, no JSON)</td>
+    <td>Missing <code>/data-plane/</code> or <code>/mgmt-plane/</code> in the URL path</td>
+    <td>Ensure the script is hitting the correct base URL</td>
+  </tr>
+  <tr>
+    <td><code>HTTP 403: Forbidden</code> (with JSON)</td>
+    <td>Insufficient permissions (view_only_admin can't create targets)</td>
+    <td>Use a token with superuser or admin role</td>
+  </tr>
+  <tr>
+    <td><code>HTTP 422: Validation Error</code></td>
+    <td>Invalid request body</td>
+    <td>Check required fields against the OpenAPI spec</td>
+  </tr>
+  <tr>
+    <td><code>response_json should specify {RESPONSE}</code></td>
+    <td>Missing <code>{RESPONSE}</code> placeholder in the response template</td>
+    <td>Add <code>{RESPONSE}</code> where the model's text appears in the response JSON</td>
+  </tr>
+  <tr>
+    <td>Token fetches fail mid-run</td>
+    <td>Token expired during parallel output fetching</td>
+    <td>The script gracefully degrades and renders what it collected. Use a service account for reliable runs.</td>
+  </tr>
+  <tr>
+    <td>Scan shows 0% ASR but report shows higher</td>
+    <td>Rate-limited/errored attacks diluting the raw rate</td>
+    <td>This is expected — the adjusted rate is more accurate</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Need help?</strong> Both scripts support <code>--help</code> for full usage information, including target-specific pattern examples.
+</div>
+
+<div style="text-align:center;padding:40px 0 0;margin-top:48px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px">
+  AIRS Red Teaming Toolkit Documentation &bull;
+  Prisma AIRS Data Plane API v0.93.0 / Management Plane API v0.86.0 &bull;
+  Palo Alto Networks
+</div>
+
+</div><!-- /content -->
+</div><!-- /page-layout -->
+
+<script>
+function toggleTheme() {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const current = root.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  btn.textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+
+// Sidebar scroll spy
+const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+const sections = [];
+sidebarLinks.forEach(link => {
+  const id = link.getAttribute('href').slice(1);
+  const el = document.getElementById(id);
+  if (el) sections.push({ el, link });
+});
+
+function updateActive() {
+  let current = sections[0];
+  for (const s of sections) {
+    if (s.el.getBoundingClientRect().top <= 80) current = s;
+  }
+  sidebarLinks.forEach(l => l.classList.remove('active'));
+  if (current) current.link.classList.add('active');
+}
+document.querySelector('.content').addEventListener('scroll', updateActive);
+window.addEventListener('scroll', updateActive);
+updateActive();
+
+// Smooth scroll for sidebar links
+sidebarLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

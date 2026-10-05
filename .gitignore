@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.csv
+*.env
+
+# OpenAPI specs (reference only — source: github.com/PaloAltoNetworks/pan.dev)
+*.yaml
+
+# Ally-specific
+ally_custom_report.py
+
+# Generated reports from customer tenants
+outputs/report_*.html
+outputs/m365*
